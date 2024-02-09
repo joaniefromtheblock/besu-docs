@@ -11,34 +11,36 @@ import TabItem from '@theme/TabItem';
 
 # Limit Trie Logs for Bonsai
 
-The early access feature `--Xbonsai-limit-trie-logs-enabled` minimizes the database size of Besu if you are using `data-storage-format=BONSAI`. When enabled, this feature can reduce database growth by more than 3 GB each week on mainnet.
+The feature `--Xbonsai-limit-trie-logs-enabled` minimizes the database size of Besu if you are using `data-storage-format=BONSAI`. When enabled, this feature can reduce database growth by more than 3 GB each week on mainnet.
 
-## Step by Step Guide
+## Run 
+
+
 
 :::caution
 
-The commands in this guide are an example. Before executing the commands on your node, ensure you tailor it to your own node configuration.
+The commands in this guide are an example. Before executing the commands on your node, ensure you modify it for your own node configuration.
 
 :::
 
-1. Update Besu config to add --Xbonsai-limit-trie-logs-enabled but don’t restart yet
+1. Update Besu config to add `--Xbonsai-limit-trie-logs-enabled`.
 1. Stop Besu
 1. (optional) Run: 
 `sudo /usr/local/bin/besu/bin/besu --data-storage-format=BONSAI --data-path=/var/lib/besu --sync-mode=X_SNAP storage x-trie-log prune`
-1. Start Besu (remembering to run sudo systemctl daemon-reload if you use a systemd service file as per CoinCashew and Somer)
+1. Start Besu and run `sudo systemctl daemon-reload` if you use a systemd service file, such as CoinCashew and Somer
 1. Look out for `Limit trie logs enabled: retention: 512; prune window: 30000` in your Besu config printout during startup
 1. Enjoy more free space
 
 
-## How?
-If you want to use this feature before it is enabled by default, simply add this option to your Besu command: `--Xbonsai-limit-trie-logs-enabled`
-When you restart Besu it will begin pruning, block by block after an initial reduction in the database during each startup.
 
-If you have a long-running node, this will not immediately clear your backlog of trie logs in the same way that resyncing does. Instead of resyncing, in order to do this we’re providing a “run once” **offline** command to immediately **prune all your old trie logs in a few minutes or less**. Note, this requires Besu to be shutdown before running, but downtime will be minimal. You will **not** need to run this command a second time if you keep `--Xbonsai-limit-trie-logs-enabled`.
+To use this feature before it is enabled by default, add the `--Xbonsai-limit-trie-logs-enabled` option to your Besu command.
+When you restart Besu it will begin pruning resulting in an initial reduction in the database at start up.
+
+If you have a long-running node, this will not immediately clear your backlog of trie logs in the same way that resyncing does. Instead of resyncing, use the “run once” **offline** command to immediately **prune all your old trie logs in a few minutes or less**. Note, this requires Besu to be shutdown before running, but downtime will be minimal. You will **not** need to run this command a second time if you keep `--Xbonsai-limit-trie-logs-enabled`.
 
 For minimal downtime, we recommend running this command **before** restarting Besu with `--Xbonsai-limit-trie-logs-enabled` (easiest to do it all at the same time).
 
-If you followed Somer Esat’s (https://someresat.medium.com/guide-to-staking-on-ethereum-ubuntu-teku-f09ecd9ef2ee ) or CoinCashew’s guide (https://www.coincashew.com/coins/overview-eth/guide-or-how-to-setup-a-validator-on-eth2-mainnet/part-i-installation/step-3-installing-execution-client/besu) then you likely have these options set in your `besu.service` or `execution.service` systemd file:
+You will likely have these options set in your `besu.service` or `execution.service` systemd file:
 
 ```
 ...
@@ -49,7 +51,7 @@ ExecStart=/usr/local/bin/besu/bin/besu \
   --data-storage-format=BONSAI \
 ...
 ```
-So in order to prune the trie logs, your command should be something like:
+To prune the trie logs, your command should look like the following:
 
 `sudo /usr/local/bin/besu/bin/besu --data-storage-format=BONSAI --data-path=/var/lib/besu --sync-mode=X_SNAP storage x-trie-log prune`
 
