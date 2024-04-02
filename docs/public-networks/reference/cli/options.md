@@ -2903,6 +2903,39 @@ random-peer-priority-enabled=true
 
 Enables or disables random prioritization of incoming connections. Enable in small, stable networks to prevent closed groups of peers forming. The default is `false`.
 
+### `receipt-compaction-enabled`
+
+<Tabs>
+
+<TabItem value="Syntax" label="Syntax" default>
+
+```bash
+--receipt-compaction-enabled=<true|false>
+```
+</TabItem>
+
+<TabItem value="Example" label="Example">
+```bash
+--receipt-compaction-enabled=true
+```
+</TabItem>
+
+<TabItem value="Environment variable" label="Environment variable">
+```bash
+BESU_RECEIPT_COMPACTION_ENABLED=true
+```
+</TabItem>
+
+<TabItem value="Configuration file" label="Configuration file">
+
+```bash
+receipt-compaction-enabled=true
+```
+</TabItem>
+</Tabs>
+
+When set to `true`, this option enables receipt compaction. Compacting receipts reduces storage by trimming unnecessary data from transaction receipts. Enabled by default, this option optimizes storage efficiency without manual intervention. It can be disabled if the compaction process introduces performance overhead, particularly when affecting RPCs in critical situations.
+
 ### `remote-connections-limit-enabled`
 
 <Tabs>
